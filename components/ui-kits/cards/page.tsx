@@ -1,6 +1,8 @@
 "use client";
 
 import React from "react";
+import { RecoilRoot } from "recoil";
+
 import { useRecoilState } from "recoil";
 import { selectedItemsState } from "../../../recoil/atoms";
 
@@ -12,6 +14,13 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  getKeyValue,
 } from "@nextui-org/react";
 
 const items = [
@@ -37,6 +46,33 @@ const items = [
   { key: "octopus", value: "Octopus" },
 ];
 
+const rows = [
+  {
+    key: "1",
+    name: "Tony Reichert",
+    role: "CEO",
+    status: "Active",
+  },
+  {
+    key: "2",
+    name: "Zoey Lang",
+    role: "Technical Lead",
+    status: "Paused",
+  },
+  {
+    key: "3",
+    name: "Jane Fisher",
+    role: "Senior Developer",
+    status: "Active",
+  },
+  {
+    key: "4",
+    name: "William Howard",
+    role: "Community Manager",
+    status: "Vacation",
+  },
+];
+
 export default function App() {
   const [selectedKeys, setSelectedKeys] = useRecoilState(selectedItemsState);
 
@@ -54,54 +90,56 @@ export default function App() {
   };
 
   return (
-    <Card
-      isBlurred
-      className="border-none bg-background/60 dark:bg-default-100/50 w-full"
-      shadow="sm"
-    >
-      <CardBody>
-        <div className="flex gap-6 items-end justify-start">
-          <div className="flex-1 w-100">
-            <Input
-              type="url"
-              variant="bordered"
-              label="URL"
-              placeholder="Paste URL here"
-            />
-          </div>
-          <Dropdown backdrop="blur">
-            <DropdownTrigger>
-              <Button
+    <RecoilRoot>
+      <Card
+        isBlurred
+        className="border-none bg-background/60 dark:bg-default-100/50 w-full"
+        shadow="sm"
+      >
+        <CardBody>
+          <div className="flex gap-6 items-end justify-start">
+            <div className="flex-1 w-100">
+              <Input
+                type="url"
                 variant="bordered"
-                className="capitalize flex-initial w-64"
+                label="URL"
+                placeholder="Paste URL here"
+              />
+            </div>
+            <Dropdown backdrop="blur">
+              <DropdownTrigger>
+                <Button
+                  variant="bordered"
+                  className="capitalize flex-initial w-64"
+                >
+                  {Array.from(selectedKeys).join(", ") || "Choose an item"}
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Multiple selection example"
+                variant="flat"
+                closeOnSelect={false}
+                disallowEmptySelection
+                selectionMode="multiple"
+                selectedKeys={selectedKeys}
+                onSelectionChange={handleSelectionChange}
+                style={{ maxHeight: "200px", overflowY: "scroll" }}
               >
-                {Array.from(selectedKeys).join(", ") || "Choose an item"}
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              aria-label="Multiple selection example"
-              variant="flat"
-              closeOnSelect={false}
-              disallowEmptySelection
-              selectionMode="multiple"
-              selectedKeys={selectedKeys}
-              onSelectionChange={handleSelectionChange}
-              style={{ maxHeight: "200px", overflowY: "scroll" }}
+                {items.map((item) => (
+                  <DropdownItem key={item.key}>{item.value}</DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            <Button
+              className="flex-none w-14"
+              variant="bordered"
+              onClick={clearSelection}
             >
-              {items.map((item) => (
-                <DropdownItem key={item.key}>{item.value}</DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-          <Button
-            className="flex-none w-14"
-            variant="bordered"
-            onClick={clearSelection}
-          >
-            Clear
-          </Button>
-        </div>
-      </CardBody>
-    </Card>
+              Clear
+            </Button>
+          </div>
+        </CardBody>
+      </Card>
+    </RecoilRoot>
   );
 }

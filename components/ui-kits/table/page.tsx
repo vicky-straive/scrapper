@@ -1,8 +1,4 @@
-"use client";
-
 import React from "react";
-import { useRecoilValue } from "recoil";
-import { selectedItemsState } from "../../../recoil/atoms";
 import {
   Table,
   TableHeader,
@@ -12,6 +8,8 @@ import {
   TableCell,
   getKeyValue,
 } from "@nextui-org/react";
+import { useRecoilValue } from "recoil";
+import { selectedItemsState } from "@/recoil/atoms";
 
 const rows = [
   {
@@ -40,44 +38,41 @@ const rows = [
   },
 ];
 
-const columns = [
-  {
-    key: "name",
-    label: "NAME",
-  },
-  {
-    key: "role",
-    label: "ROLE",
-  },
-  {
-    key: "status",
-    label: "STATUS",
-  },
-];
-
 export default function App() {
-  const selectedItems = useRecoilValue(selectedItemsState);
+  const selectedKeys = useRecoilValue(selectedItemsState);
 
+  const columns = React.useMemo(() => {
+    if (selectedKeys.size === 0) {
+      return [{ key: "default", label: "Select items from dropdown" }];
+    }
+    return Array.from(selectedKeys).map((key) => ({
+      key: key.toString(),
+
+      label: key.toString(),
+    }));
+  }, [selectedKeys]);
   return (
-    <Table aria-label="Example table with dynamic content">
-      <TableHeader columns={columns}>
-        {(column) => (
-          <TableColumn key={column.key}>
-            {column.label}{" "}
-            {selectedItems.size > 0 &&
-              `(${Array.from(selectedItems).join(", ")})`}
-          </TableColumn>
-        )}
-      </TableHeader>
-      <TableBody items={rows}>
-        {(item) => (
-          <TableRow key={item.key}>
-            {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
+    <>
+      {columns.length > 0 && (
+        <Table aria-label="Dynamic content based on dropdown selection">
+          <TableHeader columns={columns}>
+            {(column) => (
+              <TableColumn key={column.key}>{column.label}</TableColumn>
             )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+          </TableHeader>
+          <TableBody items={rows}>
+            {(item) => (
+              <TableRow key={item.key}>
+                {(columnKey) => (
+                  <TableCell>
+                    {getKeyValue(item, columnKey.toString())}
+                  </TableCell>
+                )}
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      )}
+    </>
   );
 }

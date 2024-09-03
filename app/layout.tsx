@@ -1,12 +1,9 @@
-"use client";
-
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
-import { RecoilRoot } from "recoil";
 
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
@@ -14,8 +11,16 @@ import { Navbar } from "@/components/navbar";
 
 // PRIME REACT
 import { PrimeReactProvider } from "primereact/api";
+// import "primereact/resources/primereact.css";
+// import "primeflex/primeflex.css";
+// import "primeicons/primeicons.css";
+// import "../styles/layout/layout.scss";
+// import "../styles/demo/Demos.scss";
+// import "primereact/resources/themes/saga-blue/theme.css";
+// import "primereact/resources/primereact.min.css";
+// import "primeicons/primeicons.css";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
@@ -26,7 +31,7 @@ export const metadata = {
   },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
@@ -47,31 +52,27 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <RecoilRoot>
-          <PrimeReactProvider>
-            <Providers
-              themeProps={{ attribute: "class", defaultTheme: "dark" }}
-            >
-              <div className="relative flex flex-col h-screen">
-                <Navbar />
-                <main className="container mx-auto max-w-7xl flex-grow">
-                  {children}
-                </main>
-                <footer className="w-full flex items-center justify-center py-3">
-                  <Link
-                    isExternal
-                    className="flex items-center gap-1 text-current"
-                    href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-                    title="nextui.org homepage"
-                  >
-                    {/* <span className="text-default-600">Powered by</span>
+        <PrimeReactProvider>
+          <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+            <div className="relative flex flex-col h-screen">
+              <Navbar />
+              <main className="container mx-auto max-w-7xl flex-grow">
+                {children}
+              </main>
+              <footer className="w-full flex items-center justify-center py-3">
+                <Link
+                  isExternal
+                  className="flex items-center gap-1 text-current"
+                  href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
+                  title="nextui.org homepage"
+                >
+                  {/* <span className="text-default-600">Powered by</span>
                 <p className="text-primary">NextUI</p> */}
-                  </Link>
-                </footer>
-              </div>
-            </Providers>
-          </PrimeReactProvider>
-        </RecoilRoot>
+                </Link>
+              </footer>
+            </div>
+          </Providers>
+        </PrimeReactProvider>
       </body>
     </html>
   );
